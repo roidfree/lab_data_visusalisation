@@ -3,10 +3,10 @@ import numpy as np
 import matplotlib.patches as mpatches
 
 # --------------------------------------------------
-# 1) Hard-code your Glutamine absorbance data
+# 1) Glutamine absorbance data + SEM
 # --------------------------------------------------
 absorbance_data = {
-    # --- 0.5 mM ---
+    # 0.5 mM
     ('0.5mM', 3.9,  'DM'):   {'0h': 0.460666667, '48h': 0.470666667},
     ('0.5mM', 3.9,  'HeLa'): {'0h': 0.495,       '48h': 0.568666667},
 
@@ -16,7 +16,7 @@ absorbance_data = {
     ('0.5mM', 1.85, 'DM'):   {'0h': 0.392666667, '48h': 0.410666667},
     ('0.5mM', 1.85, 'HeLa'): {'0h': 0.495,       '48h': 0.437},
 
-    # --- 2 mM ---
+    # 2 mM
     ('2mM',   3.9,  'DM'):   {'0h': 0.350333333, '48h': 0.461},
     ('2mM',   3.9,  'HeLa'): {'0h': 0.522666667, '48h': 0.745},
 
@@ -26,7 +26,7 @@ absorbance_data = {
     ('2mM',   1.85, 'DM'):   {'0h': 0.422333333, '48h': 0.408},
     ('2mM',   1.85, 'HeLa'): {'0h': 0.569666667, '48h': 0.604},
 
-    # --- 5 mM ---
+    # 5 mM
     ('5mM',   3.9,  'DM'):   {'0h': 0.532,       '48h': 0.687},
     ('5mM',   3.9,  'HeLa'): {'0h': 0.449333333, '48h': 0.582666667},
 
@@ -36,7 +36,7 @@ absorbance_data = {
     ('5mM',   1.85, 'DM'):   {'0h': 0.474,       '48h': 0.670333333},
     ('5mM',   1.85, 'HeLa'): {'0h': 0.363666667, '48h': 0.566333333},
 
-    # --- 8 mM ---
+    # 8 mM
     ('8mM',   3.9,  'DM'):   {'0h': 0.555666667, '48h': 0.683333333},
     ('8mM',   3.9,  'HeLa'): {'0h': 0.431333333, '48h': 0.741},
 
@@ -47,9 +47,6 @@ absorbance_data = {
     ('8mM',   1.85, 'HeLa'): {'0h': 0.418666667, '48h': 0.517666667},
 }
 
-# --------------------------------------------------
-# 1b) Hard-code your SEM data in a parallel dictionary
-# --------------------------------------------------
 sem_data = {
     # 0.5 mM
     ('0.5mM', 3.9,  'DM'):   {'0h': 0.088161468, '48h': 0.019376389},
@@ -93,21 +90,18 @@ sem_data = {
 }
 
 # --------------------------------------------------
-# 2) Define the order of categories
+# 2) Plot categories
 # --------------------------------------------------
-nutrient_concs = ['0.5mM', '2mM', '5mM', '8mM']  # 4 concentrations
-cell_concs = [3.9, 2.97, 1.85]                  # 3 seeding densities
-cell_types = ['DM', 'HeLa']                     # 2 cell types
-time_points = ['0h', '48h']                     # 2 time points
-
-# Build 12 groups total (4 concentrations × 3 densities)
+nutrient_concs = ['0.5mM', '2mM', '5mM', '8mM']
+cell_concs = [3.9, 2.97, 1.85]
+cell_types = ['DM', 'HeLa']
+time_points = ['0h', '48h']
 groups = [(nc, cc) for nc in nutrient_concs for cc in cell_concs]
 
 # --------------------------------------------------
-# 3) Set up figure and bar parameters
+# 3) Set up figure
 # --------------------------------------------------
 fig, ax = plt.subplots(figsize=(14, 6))
-
 bar_width = 0.1
 group_spacing = 0.4
 
@@ -119,79 +113,69 @@ colors = {
 }
 
 # --------------------------------------------------
-# 4) Plot the data with error bars
+# 4) Plot with error bars
 # --------------------------------------------------
 x_positions = []
 labels = []
 
 for i, (nutrient, cc) in enumerate(groups):
-    # Each group has 2 cell types × 2 time points = 4 bars
     group_width = len(cell_types) * len(time_points) * bar_width
     group_left = i * (group_width + group_spacing)
     
     bar_index = 0
-    for cell_type in cell_types:
-        for time_point in time_points:
-            val = absorbance_data[(nutrient, cc, cell_type)][time_point]
-            err = sem_data[(nutrient, cc, cell_type)][time_point]  # <-- SEM lookup
-
+    for ct in cell_types:
+        for tp in time_points:
+            val = absorbance_data[(nutrient, cc, ct)][tp]
+            err = sem_data[(nutrient, cc, ct)][tp]
+            
             x = group_left + bar_index * bar_width
-            ax.bar(
-                x, val, width=bar_width,
-                color=colors[(cell_type, time_point)],
-                edgecolor='black', linewidth=0.5,
-                yerr=err, capsize=3  # <-- Add error bars
-            )
+            ax.bar(x, val, width=bar_width,
+                   color=colors[(ct, tp)],
+                   edgecolor='black', linewidth=0.5,
+                   yerr=err, capsize=3)
             bar_index += 1
     
-    # Calculate center of the group for x-axis label
     group_center = group_left + group_width / 2 - bar_width / 2
     x_positions.append(group_center)
     labels.append(f"{nutrient}\n{cc}")
 
-# --------------------------------------------------
-# 5) Format axes, legend, etc.
-# --------------------------------------------------
-ax.set_title("Glutamine (0.5, 2, 5, 8 mM): 0h vs. 48h Absorbance", fontsize=14)
+ax.set_title("Glutamine: 0.5, 2, 5, 8 mM (0h vs. 48h, DM vs. HeLa)", fontsize=14)
 ax.set_xlabel("Nutrient & Cell Concentration (x10^4)", fontsize=12)
 ax.set_ylabel("Absorbance", fontsize=12)
 
 ax.set_xticks(x_positions)
-ax.set_xticklabels(labels, rotation=0, fontsize=10)
+ax.set_xticklabels(labels, fontsize=10)
 
 # Build legend
 legend_handles = []
 for ct in cell_types:
     for tp in time_points:
-        patch = mpatches.Patch(
-            color=colors[(ct, tp)],
-            label=f"{ct} {tp}",
-            edgecolor='black', linewidth=0.5
-        )
+        patch = mpatches.Patch(color=colors[(ct, tp)],
+                               label=f"{ct} {tp}",
+                               edgecolor='black', linewidth=0.5)
         legend_handles.append(patch)
 
-# Remove duplicate labels
-unique_labels = []
+seen = set()
 unique_handles = []
 for h in legend_handles:
-    if h.get_label() not in unique_labels:
-        unique_labels.append(h.get_label())
+    if h.get_label() not in seen:
         unique_handles.append(h)
+        seen.add(h.get_label())
 
 ax.legend(handles=unique_handles, loc='upper left', ncol=2, bbox_to_anchor=(0, 1.15))
 
-# Optional: Draw vertical dashed lines to separate nutrient concentrations
+# Vertical lines between different nutrient concs
 for i in range(len(groups) - 1):
-    # If the next group has a different nutrient concentration, draw a divider
     if groups[i][0] != groups[i + 1][0]:
         x_line = (x_positions[i] + x_positions[i + 1]) / 2
         ax.axvline(x_line, color='black', linestyle='--', alpha=0.8)
 
 ax.grid(axis='y', linestyle='--', alpha=0.5)
 
-# Set y-limit a bit higher than max to accommodate error bars
-max_val = max(absorbance_data[k][t] for k in absorbance_data for t in absorbance_data[k])
-ax.set_ylim(0, max_val * 1.1)
+# --------------------------------------------------
+# Force the SAME y-axis range across all 3 plots
+# --------------------------------------------------
+ax.set_ylim(0, 1.1)
 
 plt.tight_layout()
 plt.show()

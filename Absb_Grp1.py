@@ -27,31 +27,38 @@ hela_data = [
 ]
 
 # --------------------------------------------------
-# 2) Create Subplots (3 rows × 2 columns)
+# 2) Create Subplots (2 rows × 3 columns)
 # --------------------------------------------------
-fig, axes = plt.subplots(nrows=3, ncols=2, figsize=(12, 10), sharex=True, sharey=True)
+fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(15, 8), sharex=True, sharey=True)
 
 for i, ax in enumerate(axes.flat):
     # Plot for one density
-    ax.plot(time_points, dm_data[i], marker='o', color='tab:blue', label='DM')
-    ax.plot(time_points, hela_data[i], marker='o', linestyle='--', color='tab:red', label='HeLa')
+    dm_line, = ax.plot(time_points, dm_data[i], marker='o', color='tab:blue', label='DM')
+    hela_line, = ax.plot(time_points, hela_data[i], marker='o', linestyle='--', color='tab:red', label='HeLa')
     
     ax.set_title(f'Density {i+1} ({densities[i]})', fontsize=11)
     ax.set_xticks(time_points)
     ax.grid(True, linestyle='--', alpha=0.5)
     
-    if i in [4, 5]:  # Bottom row
+    if i >= 3:  # Bottom row
         ax.set_xlabel("Time (hr)")
-    if i % 2 == 0:   # Left column
+    if i % 3 == 0:  # Left column
         ax.set_ylabel("Absorbance")
 
 # --------------------------------------------------
-# 3) Shared Legend and Final Styling
+# 3) Shared Legend and Title
 # --------------------------------------------------
-# Add a single legend outside the plots
-handles, labels = axes[0, 0].get_legend_handles_labels()
-fig.legend(handles, labels, loc='upper center', ncol=2, fontsize=10, bbox_to_anchor=(0.5, 1.03))
+# Adjust the figure to make room for title and legend
+plt.subplots_adjust(top=0.92)  # Reduced space at the top
 
-fig.suptitle("Absorbance over Time: DM vs HeLa at Different Seeding Densities", fontsize=14)
-plt.tight_layout(rect=[0, 0, 1, 0.97])  # Leave space for the legend
+# Add title at the very top
+fig.suptitle("Absorbance over Time: DM vs HeLa at Different Seeding Densities", fontsize=14, y=0.98)
+
+# Create shared legend below the title but above the plots
+fig.legend([dm_line, hela_line], ["DM", "HeLa"],
+           loc='upper center', bbox_to_anchor=(0.5, 0.94), ncol=2,
+           frameon=False, fontsize=11)
+
+# Adjust layout for the plots, leaving less space for title and legend
+plt.tight_layout(rect=[0, 0, 1, 0.92])
 plt.show()

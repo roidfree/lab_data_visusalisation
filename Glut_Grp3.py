@@ -75,4 +75,5 @@ ax.text(0.87, 0.8, density_key, ha='left', va='top', fontsize=9, transform=ax.tr
         bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.5'))
 
 plt.tight_layout()
+plt.savefig('Glut_Grp3.png', dpi=300, bbox_inches='tight')
 plt.show()

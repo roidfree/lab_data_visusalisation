@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 time_points = [0, 24, 48, 72]  # Time in hours
 
 # Seeding densities and absorbance values
-densities = ["5.0×10⁴", "3.9×10⁴", "3.04×10⁴", "2.37×10⁴", "1.85×10⁴", "1.5×10⁴"]
+densities = ["5.00×10⁴", "3.90×10⁴", "3.04×10⁴", "2.37×10⁴", "1.85×10⁴", "1.50×10⁴"]
 
 dm_data = [
     [0.328003, 0.439906, 0.508586, 0.319443],
@@ -61,4 +61,5 @@ fig.legend([dm_line, hela_line], ["DM", "HeLa"],
 
 # Adjust layout for the plots, leaving less space for title and legend
 plt.tight_layout(rect=[0, 0, 1, 0.92])
+plt.savefig('Absb_Grp1.png', dpi=300, bbox_inches='tight')
 plt.show()

@@ -245,4 +245,5 @@ ax.grid(axis='y', linestyle='--', alpha=0.5)
 ax.set_ylim(0, 1.1)
 
 plt.tight_layout()
+plt.savefig('Gluc_Grp2.png', dpi=300, bbox_inches='tight')
 plt.show()

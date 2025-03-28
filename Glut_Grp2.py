@@ -108,8 +108,8 @@ bar_width = 0.1
 group_spacing = 0.4
 
 colors = {
-    ('DM','0h'):    '#90EE90',  # Light green
-    ('DM','48h'):   '#228B22',  # Forest green
+    ('DM','0h'):    '#87CEFA',  # Light sky blue
+    ('DM','48h'):   '#0000CD',  # Medium blue
     ('HeLa','0h'):  '#FFA07A',  # Light salmon
     ('HeLa','48h'): '#B22222',  # Firebrick
 }

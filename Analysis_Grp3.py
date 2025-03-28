@@ -84,7 +84,7 @@ nutrient_types = ['FBS 2.5%', 'Glutamine', 'Glucose']
 def get_value(data, ratio, nutrient, cell_type, cell_conc):
     """
     Return the value for (stiffness, nutrient, "cellType cellConc") if it exists,
-    otherwise 0. E.g. "HeLa 3.9x10^4".
+    otherwise 0. E.g. "HeLa 3.90x10^4".
     """
     if ratio not in data:
         return 0

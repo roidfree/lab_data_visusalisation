@@ -209,7 +209,7 @@ for nutrient, positions in concentration_centers.items():
             bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.4'))
 
 # Add a key for density labels
-density_key = "Density Key:\nDensity-1: 3.9×10⁴\nDensity-2: 2.97×10⁴\nDensity-3: 1.85×10⁴"
+density_key = "Density Key:\nDensity-1: 3.90×10⁴\nDensity-2: 2.97×10⁴\nDensity-3: 1.85×10⁴"
 # Position within the chart (moved more to the left, same height)
 ax.text(0.87, 0.95, density_key, ha='left', va='top', fontsize=9, transform=ax.transAxes,
        bbox=dict(facecolor='white', alpha=0.8, edgecolor='black', boxstyle='round,pad=0.5'))
